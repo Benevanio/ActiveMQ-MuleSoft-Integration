@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<flow name="topic-subscriber" doc:id="c5162fdb-1724-4b24-b184-fa9003a48abc" >
+		<http:listener doc:name="Listener" doc:id="95cfdc52-cbeb-420f-970e-e3820fd82bb7" config-ref="HTTP_Listener_config" path="/activemqtopic"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2ef8a6b9-df4d-4954-aacb-8fc0f5968900" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="1b4861ea-efe1-49c0-b388-90d368a7ec1a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<jms:publish doc:name="Publish" doc:id="e1aeea31-eaf9-408c-b5dc-ed343484e4bc" destination="activeMQ_Topic01" config-ref="JMS_Config" destinationType="TOPIC"/>
+	</flow>
+	<flow name="topic-subscriber01" doc:id="31e27199-aeac-4fe5-a898-e065db817c72" >
+		<jms:listener doc:name="On New Message" doc:id="c3d72317-a923-4e60-8fcb-9b4d0790a705" config-ref="JMS_Config" destination="activeMQ_Topic01" ackMode="AUTO" inboundContentType="application/json" numberOfConsumers="1">
+			<jms:consumer-type >
+				<jms:topic-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<logger level="INFO" doc:name="Log payload" doc:id="b0997f64-e265-4369-a5e3-1b5a85b6bfae" message="Subscriber 01 #[payload]"/>
+		<logger level="INFO" doc:name="Abstract Payload" doc:id="63b42056-6709-4c54-ab96-837332b9a2e0" message="#[payload]"/>
+	</flow>
+	<flow name="topic-subscriber02" doc:id="a12182cf-2ab7-4b48-ab8d-66cbf2bf0904" >
+		<jms:listener doc:name="On New Message" doc:id="168293e8-0971-4054-8894-14f5b44d2ead" config-ref="JMS_Config" destination="activeMQ_Topic02" ackMode="AUTO" inboundContentType="application/json" numberOfConsumers="1" >
+			<jms:consumer-type >
+				<jms:topic-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<logger level="INFO" doc:name="Log payload" doc:id="c1b3362f-05a6-473c-ba15-2a9ed20d7b3f" message="Subscriber 02 #[payload]" />
+		<logger level="INFO" doc:name="Abstract Payload" doc:id="f6bd486c-4c20-4ccf-9c9b-bf2226c58546" message="#[payload]" />
+	</flow>
+</mule>
