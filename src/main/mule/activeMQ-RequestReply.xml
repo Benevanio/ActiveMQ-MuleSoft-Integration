@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<flow name="activeMQ-RequestReplyFlow" doc:id="93d11410-982e-4e01-b78f-e5d186022fa3" >
+		<http:listener doc:name="Listener" doc:id="a4b97a54-6c3a-4077-b9b7-ecdcce476815" config-ref="HTTP_Listener_config" path="/requestReply"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a792aee9-66ba-4d48-9a8d-29d030d8316f" message="ParentFlow - #[payload]"/>
+		<jms:publish-consume doc:name="Publish consume" doc:id="80173b20-7cac-4716-bf1a-711279ea4a50" config-ref="JMS_Config" destination="activeMQ_Queue02">
+			<jms:message >
+				<jms:reply-to destination="activeMQ_Queue02Reply" />
+			</jms:message>
+			<jms:publish-configuration persistentDelivery="true" />
+			<jms:consume-configuration maximumWait="45" maximumWaitUnit="SECONDS" />
+		</jms:publish-consume>
+		<logger level="INFO" doc:name="Logger" doc:id="8f60e9d8-d770-4bcc-bbea-3df624d76daf" message="Endofparent - #[payload]"/>
+	</flow>
+	<flow name="Request-Reply-Producer" doc:id="a15d107e-ab4a-48b2-8912-1fa3cbc0d5fb" >
+		<jms:listener doc:name="RequestReplyConsumer01" doc:id="f797774c-fa08-459f-a182-3acfc2d1254d" config-ref="JMS_Config" destination="activeMQ_Queue02" numberOfConsumers="5">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+			<jms:response outboundContentType="application/json" />
+		</jms:listener>
+		<logger level="INFO" doc:name="Payload Logger" doc:id="06054f96-3656-46f2-a70b-82c5f35bb129" message="Message From Consumer01 #[payload]"/>
+		<logger level="INFO" doc:name="Abastract Logger" doc:id="fbfe0487-f915-4089-8bd7-46b8fedb2d2e" message="#[payload]"/>
+	</flow>
+</mule>

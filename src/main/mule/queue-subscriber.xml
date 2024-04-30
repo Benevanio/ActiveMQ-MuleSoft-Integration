@@ -18,6 +18,16 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<jms:publish doc:name="Publish" doc:id="e1aeea31-eaf9-408c-b5dc-ed343484e4bc" destination="activeMQ_Queue01" config-ref="JMS_Config"/>
+		<jms:publish doc:name="Publish" doc:id="a5481fbc-1aca-4a4a-a857-8129af592e70" config-ref="JMS_Config" destination="activeMQ_Queue03"/>
+	</flow>
+	<flow name="queue-subscriberFlow" doc:id="a52b7a7a-6ba2-441e-80c6-ffc5c4618dc6" >
+		<http:listener doc:name="Listener" doc:id="2d894e5d-c8e5-45d1-8f96-06dab0ad097c" config-ref="HTTP_Listener_config" path="/listenerQueue03"/>
+		<jms:consume doc:name="Consume" doc:id="f36cf5f6-dc93-4d4c-80db-84e5bf34fc08" config-ref="JMS_Config" destination="activeMQ_Queue03" ackMode="IMMEDIATE">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:consume>
+		<logger level="INFO" doc:name="Log Payload" doc:id="3d96f4bb-87d8-4c83-8c25-eb76e19113eb" message="Logger #[payload]"/>
 	</flow>
 	<flow name="Queue-Subscriber-01" doc:id="31e27199-aeac-4fe5-a898-e065db817c72" >
 		<jms:listener doc:name="On New Message" doc:id="c3d72317-a923-4e60-8fcb-9b4d0790a705" config-ref="JMS_Config" destination="activeMQ_Queue01 " ackMode="AUTO" inboundContentType="application/json" numberOfConsumers="1">
