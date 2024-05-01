@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="activeMQMysqlModeFlow" doc:id="47268b3d-14f4-4c95-8d54-540a03bf70b4" >
+		<jms:listener doc:name="On New Message" doc:id="004f35ca-efbe-4c2f-9181-5e9e83f037f4" config-ref="JMS_Config" destination="activeMQ_Queue04"/>
+		<logger level="INFO" doc:name="Logger" doc:id="df76dd6f-acdc-4887-b899-a6645d804cbf" />
+		<db:insert doc:name="Insert" doc:id="2fcf75a8-883e-485c-9d40-1fefeb3d2c6f" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO artist (artistName, genre) VALUES (:artistName, :genre)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"artistName": payload.artistName,
+	"genre": payload.genre
+}]]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="014117df-5095-4924-8570-a4071b0ee59a" />
+	</flow>
+</mule>

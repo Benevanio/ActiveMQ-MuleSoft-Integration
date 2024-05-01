@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<!-- [STUDIO:"tempFlow"]	<flow name="tempFlow" doc:id="a753ce9d-603f-47ec-ac62-b8dd4d705ddc" >
+	</flow> [STUDIO] -->
+<!-- [STUDIO:"tempSub_Flow"]	<sub-flow name="tempSub_Flow" doc:id="ffa249ec-38b7-4305-bf8c-930f5230a354" /> [STUDIO] -->
+</mule>
